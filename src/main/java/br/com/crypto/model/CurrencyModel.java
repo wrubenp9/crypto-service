@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -21,5 +22,5 @@ public class CurrencyModel {
     private String Code;
 
     @CreationTimestamp
-    private String cratedAt;
+    private OffsetDateTime cratedAt;
 }
