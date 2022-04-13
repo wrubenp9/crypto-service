@@ -8,9 +8,9 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) //especifica onde será o gerado o hash
 @Entity
-public class CurrencyModel {
+public class Currency {
 
     @EqualsAndHashCode.Include
     @Id
@@ -22,5 +22,5 @@ public class CurrencyModel {
     private String Code;
 
     @CreationTimestamp
-    private OffsetDateTime cratedAt;
+    private OffsetDateTime createdAt;
 }
