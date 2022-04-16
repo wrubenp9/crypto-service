@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CurrencyRequest {
-    private String name;
+    private String nameCrypto;
     private String code;
 }

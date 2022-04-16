@@ -1,14 +1,14 @@
 package br.com.crypto.controller;
 
 import br.com.crypto.controller.dto.CurrencyDTO;
+import br.com.crypto.controller.request.CurrencyRequest;
+import br.com.crypto.model.Currency;
 import br.com.crypto.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -20,42 +20,27 @@ public class CurrencyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CurrencyDTO> findAll() {
-        return currencyService.findAll();
+    public List<CurrencyDTO> findCurrencyByName(
+            @RequestParam(value = "nameCrypto", required = false) String nameCrypto,
+            @RequestParam(value = "code", required = false) String code) {
+        return currencyService.findCurrency(nameCrypto, code);
     }
 
-/*
-    Busca
-        Recebe:
-            Como parâmetro os filtros: name e code (ambos opcionais)
-        Retorna:
-            @ResponseStatus(HttpStatus.OK)
-*/
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveCrypto(@RequestBody CurrencyRequest currencyRequest) {
+        currencyService.save(currencyRequest);
+    }
 
-/*
-    Salvar
-        Recebe:
-            - Name e code (obrigatorios)
-        Retorna:
-            @ResponseStatus(HttpStatus.CREATED) //criado
-*/
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable(value = "id") Long id, @RequestBody CurrencyRequest currencyRequest) {
+        currencyService.update(id, currencyRequest);
+    }
 
-/*
-    Editar
-        Recebe:
-            - Parâmetro via path ID
-            - Name e code (opcionais)
-        Retorna:
-            @ResponseStatus(HttpStatus.OK) //sucesso
-*/
-
-/*
-    Remover
-        Recebe:
-            - Parâmetro via path ID
-        Retorna:
-            @ResponseStatus(HttpStatus.OK) //sucesso
-*/
-
-
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteById(@PathVariable(value = "id") Long id) {
+        currencyService.deleteById(id);
+    }
 }

@@ -1,14 +1,18 @@
 package br.com.crypto.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) //especifica onde será o gerado o hash
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Currency {
 
@@ -17,10 +21,11 @@ public class Currency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String nameCrypto;
 
-    private String Code;
+    private String code;
 
     @CreationTimestamp
     private OffsetDateTime createdAt;
+
 }
