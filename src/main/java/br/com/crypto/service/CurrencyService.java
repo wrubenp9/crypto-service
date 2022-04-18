@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
@@ -23,26 +21,13 @@ public class CurrencyService {
     @Autowired
     private CurrencyMapper currencyMapper;
 
-//    public List<CurrencyDTO> findAll() {
-//        List<Currency> currency = currencyRepository.findAll();
-//        return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
-//    }
-
-    public List<CurrencyDTO> findById(Long id) {
-        var op = currencyRepository.findById(id);
-        return currencyMapper.fromListCurrencyModelToListCurrencyDTO(op.stream().collect(Collectors.toList()));
-    }
-
     public List<CurrencyDTO> findCurrency(String nameCrypto, String code) {
         return verifyCurrencyNameNullCodeNull(nameCrypto, code);
     }
 
-    public List<CurrencyDTO> verifyCurrencyNameNullCodeNull(String nameCrypto, String code) {
-
-        var order = Sort.by(Sort.Direction.ASC, "id");
+    private List<CurrencyDTO> verifyCurrencyNameNullCodeNull(String nameCrypto, String code) {
 
         List<Currency> currency;
-        //reduzir fluxo de if/else | deixar mais legivel
         if (nameCrypto != null && code != null) {
             currency = currencyRepository.findCurrencyByNameCryptoAndCode(nameCrypto, code);
         } else if (nameCrypto != null) {
@@ -50,7 +35,7 @@ public class CurrencyService {
         } else if (code != null) {
             currency = currencyRepository.findCurrencyByCode(code);
         } else {
-            currency = currencyRepository.findAll(order);
+            currency = currencyRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         }
         return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
     }
@@ -73,6 +58,7 @@ public class CurrencyService {
             System.out.println("Crypto id:" + id + ",cannot be found!"); //Temporario
         }
     }
+
     public void deleteById(Long id) {
         currencyRepository.deleteById(id);
     }
