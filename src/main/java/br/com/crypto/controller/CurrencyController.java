@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/currency")
@@ -32,13 +33,13 @@ public class CurrencyController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable(value = "id") Long id, @RequestBody CurrencyRequest currencyRequest) {
+    public void update(@PathVariable(value = "id") UUID id, @RequestBody CurrencyRequest currencyRequest) {
         currencyService.update(id, currencyRequest);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById(@PathVariable(value = "id") Long id) {
+    public void deleteById(@PathVariable(value = "id") UUID id) {
         currencyService.deleteById(id);
     }
 }

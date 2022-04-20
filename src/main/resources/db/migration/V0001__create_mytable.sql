@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS currency(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(80) NOT NULL,
+    id UUID PRIMARY KEY,
+    name_crypto VARCHAR(80) NOT NULL,
     code VARCHAR(80) NOT NULL,
 	created_at TIMESTAMP
 );

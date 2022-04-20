@@ -2,9 +2,11 @@ package br.com.crypto.controller.dto;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class CurrencyDTO {
-    private Long id;
+    private UUID id;
     private String nameCrypto;
     private String code;
 }
