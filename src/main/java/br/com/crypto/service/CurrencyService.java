@@ -5,13 +5,16 @@ import br.com.crypto.controller.request.CurrencyRequest;
 import br.com.crypto.mapper.CurrencyMapper;
 import br.com.crypto.model.Currency;
 import br.com.crypto.repository.CurrencyRepository;
+import br.com.crypto.service.exception.DataBaseException;
 import br.com.crypto.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +37,6 @@ public class CurrencyService {
         List<Currency> currency;
         if (nameCrypto != null && code != null) {
             currency = currencyRepository.findCurrencyByNameCryptoAndCode(nameCrypto, code);
-
         } else if (nameCrypto != null) {
             currency = currencyRepository.findCurrencyByNameCrypto(nameCrypto);
             message = nameCrypto;
@@ -42,14 +44,14 @@ public class CurrencyService {
             currency = currencyRepository.findCurrencyByCode(code);
             message = code;
         } else {
-            currency = currencyRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+            currency = currencyRepository.findAll(Sort.by(Sort.Direction.ASC, "nameCrypto"));
         }
 
         //Verifica se a lista está vazia
-        if (currency.isEmpty()) {//
-            throw new ResourceNotFoundException(message);
-        } else {
+        if (!currency.isEmpty()) {
             return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
+        } else {
+            throw new ResourceNotFoundException(message);
         }
     }
 
@@ -60,15 +62,17 @@ public class CurrencyService {
     }
 
     public void update(UUID id, CurrencyRequest currencyRequest) {
-        var op = currencyRepository.findById(id);
-        if (op.isPresent()) {
-            var currency = op.get();
-            currency.setNameCrypto(currencyRequest.getNameCrypto());
-            currency.setCode(currencyRequest.getCode());
-            currencyRepository.save(currency);
-        } else {
+        try {
+            Currency entity = currencyRepository.getById(id);
+            updateData(entity, currencyRequest);
+            currencyRepository.save(entity);
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
+    }
+    private void updateData(Currency entity, CurrencyRequest currencyRequest) {
+        entity.setNameCrypto(currencyRequest.getNameCrypto());
+        entity.setCode(currencyRequest.getCode());
     }
 
     public void deleteById(UUID id) {
@@ -76,6 +80,9 @@ public class CurrencyService {
             currencyRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException(e.getMessage());
+
         }
     }
 
