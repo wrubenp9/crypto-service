@@ -7,7 +7,6 @@ import br.com.crypto.model.Currency;
 import br.com.crypto.repository.CurrencyRepository;
 import br.com.crypto.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,27 +30,17 @@ public class CurrencyService {
     }
 
     private List<CurrencyDTO> verifyCurrencyNameNullCodeNull(String nameCrypto, String code) {
-        String message = null;
-
         List<Currency> currency;
         if (nameCrypto != null && code != null) {
             currency = currencyRepository.findCurrencyByNameCryptoAndCode(nameCrypto, code);
         } else if (nameCrypto != null) {
             currency = currencyRepository.findCurrencyByNameCrypto(nameCrypto);
-            message = nameCrypto;
         } else if (code != null) {
             currency = currencyRepository.findCurrencyByCode(code);
-            message = code;
         } else {
             currency = currencyRepository.findAll(Sort.by(Sort.Direction.ASC, "nameCrypto"));
         }
-
-//        Verifica se a lista está vazia
-        if (!currency.isEmpty()) {
-            return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
-        } else {
-            throw new ResourceNotFoundException(message);
-        }
+        return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
     }
 
     @Transactional
@@ -82,5 +71,4 @@ public class CurrencyService {
             throw new ResourceNotFoundException(id);
         }
     }
-
 }

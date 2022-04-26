@@ -5,10 +5,10 @@ public class ResourceNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public ResourceNotFoundException(String message) {
-        super("Resource not found: " + message);
+        super("Resource not found " + message);
     }
 
     public ResourceNotFoundException(Object id){
-        super("Currency not found. Id: " + id);
+        super("Resource not found. Id: " + id);
     }
 }
