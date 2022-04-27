@@ -24,5 +24,4 @@ public class Currency {
 
     @CreationTimestamp
     private OffsetDateTime createdAt;
-
 }
