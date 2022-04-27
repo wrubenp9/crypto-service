@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Crypto Service
+  datasource:
+    url: jdbc:h2:mem:crypto;
+    username: sa
+    password: sa
+    drive-class-name: org.h2.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: create-drop

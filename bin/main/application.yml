@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Crypto Service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crypto
+    username: postgres
+    password: postgres
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        ddl-auto: update
+server:
+  port: 8080
