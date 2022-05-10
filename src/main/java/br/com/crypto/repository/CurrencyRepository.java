@@ -14,7 +14,7 @@ public interface CurrencyRepository extends JpaRepository<Currency, UUID> {
 //    @Query("SELECT c FROM Currency c WHERE LOWER(c.nameCrypto) LIKE LOWER(CONCAT('%',:nameCrypto,'%'))")
     List<Currency> findCurrencyByNameCrypto(String nameCrypto);
 
-    @Query("SELECT c FROM Currency c WHERE LOWER(c.code) LIKE LOWER(CONCAT('%',:code,'%'))")
+//    @Query("SELECT c FROM Currency c WHERE LOWER(c.code) LIKE LOWER(CONCAT('%',:code,'%'))")
     List<Currency> findCurrencyByCode(String code);
 
     List<Currency> findCurrencyByNameCryptoAndCode(String nameCrypto, String code);

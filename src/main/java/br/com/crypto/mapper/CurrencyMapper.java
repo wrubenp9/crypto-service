@@ -3,8 +3,10 @@ package br.com.crypto.mapper;
 import br.com.crypto.controller.dto.CurrencyDTO;
 import br.com.crypto.controller.request.CurrencyRequest;
 import br.com.crypto.model.Currency;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,19 +17,21 @@ import java.util.stream.Collectors;
 @Component
 public class CurrencyMapper {
 
-    @Autowired
-    private ModelMapper mapper;
-
-    public CurrencyDTO fromCurrencyToCurrencyDTO(Currency currency){
+    public static CurrencyDTO currencyToCurrencyDTO(Currency currency){
+        ModelMapper mapper = new ModelMapper();
         return mapper.map(currency, CurrencyDTO.class);
     }
 
-    public List<CurrencyDTO> fromListCurrencyModelToListCurrencyDTO(List<Currency> currencies) {
+    public static List<CurrencyDTO> listCurrencyModelToListCurrencyDTO(List<Currency> currencies) {
         return currencies.stream()
-                .map(currency -> fromCurrencyToCurrencyDTO(currency))
+                .map(currency -> currencyToCurrencyDTO(currency))
                 .collect(Collectors.toList());
     }
-    public Currency fromCurrencyRequestToCurrency(CurrencyRequest currencyRequest) {
+//    .map(CurrencyMapper::CurrencyToCurrencyDTO) // como funciona essa função lambda
+//    .map(currency -> CurrencyToCurrencyDTO(currency))
+
+    public static Currency currencyRequestToCurrency(CurrencyRequest currencyRequest) {
+        ModelMapper mapper = new ModelMapper();
         return mapper.map(currencyRequest, Currency.class);
     }
 

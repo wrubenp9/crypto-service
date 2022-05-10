@@ -17,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import static br.com.crypto.mapper.CurrencyMapper.*;
 
 @Service
 @AllArgsConstructor
@@ -30,10 +33,6 @@ public class CurrencyService {
     private CurrencyMapper currencyMapper;
 
     public List<CurrencyDTO> findCurrency(String nameCrypto, String code) {
-        return verifyCurrencyNameNullCodeNull(nameCrypto, code);
-    }
-
-    private List<CurrencyDTO> verifyCurrencyNameNullCodeNull(String nameCrypto, String code) {
         List<Currency> currency;
         if (nameCrypto != null && code != null) {
             currency = currencyRepository.findCurrencyByNameCryptoAndCode(nameCrypto, code);
@@ -44,16 +43,17 @@ public class CurrencyService {
         } else {
             currency = currencyRepository.findAll(Sort.by(Sort.Direction.ASC, "nameCrypto"));
         }
-        return currencyMapper.fromListCurrencyModelToListCurrencyDTO(currency);
+
+        return listCurrencyModelToListCurrencyDTO(currency);
     }
 
     @Transactional
     public void save(CurrencyRequest currencyRequest) {
         try {
-            Currency currency = currencyMapper.fromCurrencyRequestToCurrency(currencyRequest);
+            Currency currency = currencyRequestToCurrency(currencyRequest);
             currencyRepository.save(currency);
-        } catch (DataIntegrityViolationException e){
-            throw  new DatabaseException(e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -64,8 +64,6 @@ public class CurrencyService {
             currencyRepository.save(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
-        } catch (DataIntegrityViolationException e){
-            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -79,6 +77,35 @@ public class CurrencyService {
             currencyRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
+        }
+    }
+
+
+
+    // Temporario - Exercicio
+    public String avaliacao(int nota){
+        if(nota > 60){
+            return "Aprovado";
+        } else if (nota  >= 50 && nota <= 60){
+            return "Recuperação";
+        } else{
+            return "Reprovado";
+        }
+    }
+
+    public String verificaCrypto(UUID id){
+        Optional<Currency> currency = currencyRepository.findById(id);
+
+        if (currency.isPresent()){
+            if (currency.get().getNameCrypto().equals("Bitcoin")){
+                return "Bitcoin escolhido";
+            } else if (currency.get().getNameCrypto().equals("Ethereum")){
+                return "Ethereum escolhido";
+            } else {
+                return "Não trabalhamos com essa crypto";
+            }
+        } else {
+            return "Não existe";
         }
     }
 }

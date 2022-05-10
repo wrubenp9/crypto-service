@@ -8,6 +8,8 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@Builder
 @Entity
 public class Currency {
 
