@@ -27,13 +27,6 @@ public class CurrencyRepositoryTest {
     @Autowired
     private CurrencyRepository currencyRepository;
 
-    //Temporario
-    @Test
-    public void findAll() {
-        List<Currency> currencyList = currencyRepository.findAll();
-        System.out.println("\n\n\n" + currencyList + "\n\n\n");
-    }
-
     @Test
     @DisplayName("Should find currency by nameCrypt")
     public void shouldFindCurrencyByNameCrypto() {

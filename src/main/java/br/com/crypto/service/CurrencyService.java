@@ -54,6 +54,8 @@ public class CurrencyService {
             currencyRepository.save(currency);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,34 +79,6 @@ public class CurrencyService {
             currencyRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
-        }
-    }
-
-
-    // Temporario - Exercicio
-    public String avaliacao(int nota) {
-        if (nota > 60) {
-            return "Aprovado";
-        } else if (nota >= 50 && nota <= 60) {
-            return "Recuperação";
-        } else {
-            return "Reprovado";
-        }
-    }
-
-    public String verificaCrypto(UUID id) {
-        Optional<Currency> currency = currencyRepository.findById(id);
-
-        if (currency.isPresent()) {
-            if (currency.get().getNameCrypto().equals("Bitcoin")) {
-                return "Bitcoin escolhido";
-            } else if (currency.get().getNameCrypto().equals("Ethereum")) {
-                return "Ethereum escolhido";
-            } else {
-                return "Não trabalhamos com essa crypto";
-            }
-        } else {
-            return "Não existe";
         }
     }
 }
