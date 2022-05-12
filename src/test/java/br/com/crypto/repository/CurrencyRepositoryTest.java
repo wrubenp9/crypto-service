@@ -1,25 +1,17 @@
 package br.com.crypto.repository;
 
 import br.com.crypto.model.Currency;
-import br.com.crypto.service.exception.DatabaseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -34,6 +26,14 @@ public class CurrencyRepositoryTest {
 
     @DisplayName("Should find currency by nameCrypt")
     @Test
+//    @Sql(
+//            scripts = {
+//                    "classpath:db/clean_tables.sql",
+//                    "classpath:db/insert_tables.sql"
+//
+//            },
+//            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+//    )
     public void shouldFindCurrencyByNameCrypto() {
         // Given
         Currency currency = new Currency("Bitcoin", "BTC");

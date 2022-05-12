@@ -81,25 +81,24 @@ public class CurrencyService {
     }
 
 
-
     // Temporario - Exercicio
-    public String avaliacao(int nota){
-        if(nota > 60){
+    public String avaliacao(int nota) {
+        if (nota > 60) {
             return "Aprovado";
-        } else if (nota  >= 50 && nota <= 60){
+        } else if (nota >= 50 && nota <= 60) {
             return "Recuperação";
-        } else{
+        } else {
             return "Reprovado";
         }
     }
 
-    public String verificaCrypto(UUID id){
+    public String verificaCrypto(UUID id) {
         Optional<Currency> currency = currencyRepository.findById(id);
 
-        if (currency.isPresent()){
-            if (currency.get().getNameCrypto().equals("Bitcoin")){
+        if (currency.isPresent()) {
+            if (currency.get().getNameCrypto().equals("Bitcoin")) {
                 return "Bitcoin escolhido";
-            } else if (currency.get().getNameCrypto().equals("Ethereum")){
+            } else if (currency.get().getNameCrypto().equals("Ethereum")) {
                 return "Ethereum escolhido";
             } else {
                 return "Não trabalhamos com essa crypto";

@@ -8,5 +8,4 @@ import lombok.Data;
 public class CurrencyRequest {
     private String nameCrypto;
     private String code;
-
 }

@@ -12,4 +12,14 @@ public class CurrencyDTO {
     private String nameCrypto;
     private String code;
     private OffsetDateTime createdAt;
+
+    public  CurrencyDTO(){
+    }
+
+    public CurrencyDTO(UUID id, String nameCrypto, String code, OffsetDateTime createdAt) {
+        this.id = id;
+        this.nameCrypto = nameCrypto;
+        this.code = code;
+        this.createdAt = createdAt;
+    }
 }

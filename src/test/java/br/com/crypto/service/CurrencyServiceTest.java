@@ -3,7 +3,6 @@ package br.com.crypto.service;
 
 import br.com.crypto.controller.dto.CurrencyDTO;
 import br.com.crypto.controller.request.CurrencyRequest;
-import br.com.crypto.mapper.CurrencyMapper;
 import br.com.crypto.model.Currency;
 import br.com.crypto.repository.CurrencyRepository;
 import br.com.crypto.service.exception.DatabaseException;
@@ -23,8 +22,7 @@ import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -35,11 +33,20 @@ public class CurrencyServiceTest {
     @Mock  // cria uma simulação
     CurrencyRepository currencyRepository;
 
-    @Mock
-    CurrencyMapper currencyMapper;
-
     @InjectMocks // cria uma instancia da classe e injeta o mock que são criados
     CurrencyService currencyService;
+
+    Currency currency = Currency.builder()
+            .id(UUID.randomUUID())
+            .nameCrypto("Bitcoin")
+            .code("BTC")
+            .createdAt(OffsetDateTime.now())
+            .build();
+
+    CurrencyRequest currencyRequest = CurrencyRequest.builder()
+            .nameCrypto("Bitcoin")
+            .code("BTC")
+            .build();
 
     @BeforeEach  //o metodo inicializa os mocks e o injeta para cada metodo de teste ao ser chamado
     public void setUp() {
@@ -50,12 +57,6 @@ public class CurrencyServiceTest {
     @DisplayName("Should find currency by nameCrypt and Code")
     public void shouldFindCurrencyByNameCryptoAndCode() {
         // Given
-        Currency currency = Currency.builder()
-                .id(UUID.randomUUID())
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .createdAt(OffsetDateTime.now())
-                .build();
 
         List<Currency> currencyListMock = Collections.singletonList(currency);
         when(currencyRepository.findCurrencyByNameCryptoAndCode(eq("Bitcoin"), eq("BTC"))).thenReturn(currencyListMock);
@@ -80,8 +81,10 @@ public class CurrencyServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        List<Currency> currencyListMock = Collections.singletonList(currency);
-        Mockito.when(currencyRepository.findCurrencyByNameCrypto(eq("Bitcoin"))).thenReturn(currencyListMock);
+        List<Currency> currencyList = new ArrayList<>();
+        currencyList.add(currency);
+
+        Mockito.when(currencyRepository.findCurrencyByNameCrypto(eq("Bitcoin"))).thenReturn(currencyList);
 
         // When
         var listFindCurrencyByNameCrypto = currencyService.findCurrency("Bitcoin", null);
@@ -95,13 +98,6 @@ public class CurrencyServiceTest {
     @DisplayName("Should find currency by code")
     public void shouldFindCurrencyByCode() {
         // Given
-        Currency currency = Currency.builder()
-                .id(UUID.randomUUID())
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .createdAt(OffsetDateTime.now())
-                .build();
-
         List<Currency> currencyListMock = Collections.singletonList(currency);
         Mockito.when(currencyRepository.findCurrencyByCode(eq("BTC"))).thenReturn(currencyListMock);
 
@@ -133,11 +129,11 @@ public class CurrencyServiceTest {
                 .build();
 
         Sort order = Sort.by(Sort.Direction.ASC, "nameCrypto");
-        List<Currency> currencyListMock = new ArrayList<>();
-        currencyListMock.add(currency1);
-        currencyListMock.add(currency2);
+        List<Currency> currencyList = new ArrayList<>();
+        currencyList.add(currency1);
+        currencyList.add(currency2);
 
-        Mockito.when(currencyRepository.findAll(eq(order))).thenReturn(currencyListMock);
+        when(currencyRepository.findAll(eq(order))).thenReturn(currencyList);
 
         // When
         List<CurrencyDTO> listFindAllCurrency = currencyService.findCurrency(null, null);
@@ -152,15 +148,8 @@ public class CurrencyServiceTest {
     @DisplayName("Should save currency")
     public void shouldSave() {
         // Given
-        CurrencyRequest currencyRequest = CurrencyRequest.builder()
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .build();
-
-        Currency currency = new Currency("Bitcoin", "BTC");
-
         // Testando comportanmento do mock - Manipulando save do repository
-        Mockito.when(currencyRepository.save(any())).thenReturn(currency);
+        when(currencyRepository.save(any())).thenReturn(currency);
 
         // When
         currencyService.save(currencyRequest);
@@ -173,12 +162,6 @@ public class CurrencyServiceTest {
     @Test
     @DisplayName("Should return exception save")
     public void shouldReturnExceptionSave() {
-        // Given
-        CurrencyRequest currencyRequest = CurrencyRequest.builder()
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .build();
-
         DataIntegrityViolationException exception = new DataIntegrityViolationException("Database error");
 
         when(currencyRepository.save(any())).thenThrow(exception);
@@ -193,19 +176,8 @@ public class CurrencyServiceTest {
     @Test
     @DisplayName("Should update")
     public void shouldUpdate() {
-        // Given
+        //
         UUID id = UUID.randomUUID();
-        Currency currency = Currency.builder()
-                .id(id)
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .createdAt(OffsetDateTime.now())
-                .build();
-
-        CurrencyRequest currencyRequest = CurrencyRequest.builder()
-                .nameCrypto("Ethereum")
-                .code("ETH")
-                .build();
 
         //mock chama o metodo getByID com id igual e retorna currency
         when(currencyRepository.getById(eq(id))).thenReturn(currency);
@@ -214,17 +186,13 @@ public class CurrencyServiceTest {
         currencyService.update(id, currencyRequest);
 
         // Then
-        assertEquals(currency.getNameCrypto(), "Ethereum");
+        assertEquals(currency.getNameCrypto(), "Bitcoin");
     }
 
     @Test
     @DisplayName("Should return resource not found exception update")
     public void shouldReturnResourceNotFoundExceptionUpdate() {
         UUID id = UUID.randomUUID();
-        CurrencyRequest currencyRequest = CurrencyRequest.builder()
-                .nameCrypto("Ethereum")
-                .code("ETH")
-                .build();
 
         EntityNotFoundException exception = new EntityNotFoundException("Not found");
         doThrow(exception).when(currencyRepository).getById(id);
@@ -241,13 +209,6 @@ public class CurrencyServiceTest {
     @DisplayName("Should delete by id")
     public void shouldDeleteById() {
         // Given
-        Currency currency = Currency.builder()
-                .id(UUID.randomUUID())
-                .nameCrypto("Bitcoin")
-                .code("BTC")
-                .createdAt(OffsetDateTime.now())
-                .build();
-
         currencyRepository.save(currency);
         when(currencyRepository.findById(currency.getId())).thenReturn(Optional.of(currency));
 

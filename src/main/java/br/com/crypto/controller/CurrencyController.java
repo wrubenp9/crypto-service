@@ -3,7 +3,6 @@ package br.com.crypto.controller;
 import br.com.crypto.controller.dto.CurrencyDTO;
 import br.com.crypto.controller.request.CurrencyRequest;
 import br.com.crypto.service.CurrencyService;
-import br.com.crypto.service.exception.DatabaseException;
 import br.com.crypto.service.exception.EmpytFieldException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ public class CurrencyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CurrencyDTO> findCurrencyByName(
+    public List<CurrencyDTO> findCurrency(
             @RequestParam(value = "nameCrypto", required = false) String nameCrypto,
             @RequestParam(value = "code", required = false) String code) {
         return currencyService.findCurrency(nameCrypto, code);

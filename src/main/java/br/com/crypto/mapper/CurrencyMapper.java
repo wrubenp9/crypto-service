@@ -27,8 +27,6 @@ public class CurrencyMapper {
                 .map(currency -> currencyToCurrencyDTO(currency))
                 .collect(Collectors.toList());
     }
-//    .map(CurrencyMapper::CurrencyToCurrencyDTO) // como funciona essa função lambda
-//    .map(currency -> CurrencyToCurrencyDTO(currency))
 
     public static Currency currencyRequestToCurrency(CurrencyRequest currencyRequest) {
         ModelMapper mapper = new ModelMapper();

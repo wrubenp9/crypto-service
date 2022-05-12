@@ -32,7 +32,7 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(EmpytFieldException.class)
     public ResponseEntity<StandardError> currencyNotFound(EmpytFieldException e, HttpServletRequest request) {
-        String error = "Empyt Field";
+        String error = "Empty Field";
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
